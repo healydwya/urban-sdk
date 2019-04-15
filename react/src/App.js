@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import scooter from './scooter.svg';
-import map from './map.svg';
-import bicycle from './bicycle.svg';
+import scooter from './assets/scooter.svg';
+import map from './assets/map.svg';
+import bicycle from './assets/bicycle.svg';
 import CountUp from 'react-countup';
 
 import axios from 'axios';
