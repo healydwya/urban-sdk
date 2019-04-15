@@ -161,6 +161,7 @@ class App extends Component {
           <div> 
             <h2> Filter by Date Range: </h2>
             <select value={this.state.date} onChange={this.handleDate}>
+              <option value="" disabled selected>Select Date</option>
               <option value="apr-19"> April 2019 </option>
               <option value="mar-19"> March 2019 </option>
               <option value="feb-19"> February 2019 </option>
