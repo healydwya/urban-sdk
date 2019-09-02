@@ -19,50 +19,50 @@ class Settings extends Component {
     render() {
 
         return (
-            <div class="settings-page">
-                <h1 class="prefs-title"> Preferences </h1>
-                <div class="settings-box">
-                    <div class="settings-row">
-                        <div class="row-title">
+            <div className="settings-page">
+                <h1 className="prefs-title"> Preferences </h1>
+                <div className="settings-box">
+                    <div className="settings-row">
+                        <div className="row-title">
                             Geolocation
                         </div>
-                        <div class="row-switch">
+                        <div className="row-switch">
                             <InputSwitch checked={this.state.geovalue} onChange={(e) => this.setState({ geovalue: e.value })} />
                         </div>
-                        <div class="row-text">
+                        <div className="row-text">
                             Info about geo location.
                         </div>
                     </div>
-                    <div class="settings-row">
-                        <div class="row-title">
+                    <div className="settings-row">
+                        <div className="row-title">
                             Auto Zoom
                         </div>
-                        <div class="row-switch">
+                        <div className="row-switch">
                             <InputSwitch checked={this.state.zoomvalue} onChange={(e) => this.setState({ zoomvalue: e.value })} />
                         </div>
-                        <div class="row-text">
+                        <div className="row-text">
                             Info about auto zoom.
                         </div>
                     </div>
-                    <div class="settings-row">
-                        <div class="row-title">
+                    <div className="settings-row">
+                        <div className="row-title">
                             Alternative Routes
                         </div>
-                        <div class="row-switch">
+                        <div className="row-switch">
                             <InputSwitch checked={this.state.routesvalue} onChange={(e) => this.setState({ routesvalue: e.value })} />
                         </div>
-                        <div class="row-text">
+                        <div className="row-text">
                             Info about alternative routes.
                         </div>
                     </div>
-                    <div class="settings-row">
-                        <div class="row-title">
+                    <div className="settings-row">
+                        <div className="row-title">
                             Auto Shift Completion
                         </div>
-                        <div class="row-switch">
+                        <div className="row-switch">
                             <InputSwitch checked={this.state.shiftvalue} onChange={(e) => this.setState({ shiftvalue: e.value })} />
                         </div>
-                        <div class="row-text">
+                        <div className="row-text">
                             Info about auto shift completion.
                         </div>
                     </div>
