@@ -1,80 +1,166 @@
 import React, { Component } from 'react';
 import './App.css';
-import scooter from './assets/scooter.svg';
-import map from './assets/map.svg';
-import bicycle from './assets/bicycle.svg';
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 import CountUp from 'react-countup';
+import { TabMenu } from 'primereact/tabmenu';
+import { Chart } from 'primereact/chart';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Settings from './Settings';
+
 
 import axios from 'axios';
 
+
+
+function Shift() {
+  return <h2>Home</h2>;
+}
+
+class ShiftDetails extends Component {
+
+  async getTrips() {
+    const res = await axios.get('https://813fjxvnka.execute-api.us-east-1.amazonaws.com/v1/getdata');
+    const { data } = await res;
+
+    const result = Object.values(data);
+    const resultData = result[0];
+
+    this.setState({ resultData })
+  }
+
+
+
+  render() {
+
+    const data = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'],
+      datasets: [
+        {
+          label: 'Average Minutes to Respond',
+          data: [5, 20, 5, 15, 6, 4, 8, 19],
+          fill: false,
+          backgroundColor: '#42A5F5',
+          borderColor: '#42A5F5'
+        },
+      ]
+    };
+
+    const cars = this.resultData;
+
+    return (<div className="App">
+      <div className="Info-row">
+        <div className="App-intro">
+          <h1>
+            <CountUp end={this.props.state.scooterArray.length}> </CountUp>
+          </h1>
+        </div>
+        <div className="App-intro">
+          <h1>
+            <CountUp end={this.props.state.scooterArray.length}> </CountUp>
+          </h1>
+        </div>
+        <div className="App-intro">
+          <h1>
+            <CountUp end={this.props.state.scooterDistance}></CountUp>
+          </h1>
+        </div>
+        <div className="App-intro">
+          <h1>
+            <CountUp end={this.props.state.bikeArray.length}></CountUp>
+          </h1>
+        </div>
+      </div>
+      <div className="response-time-row">
+        <h2> Incident Response Time </h2>
+        <Chart width="90vw" height="20%" type="line" data={data} />
+      </div>
+      <div className="last-row">
+        <h2 className="last-text"> Last Incidents </h2>
+        <DataTable className="incident-data" value={cars}>
+          <Column field="county" header="County" />
+          <Column field="district" header="District" />
+          <Column field="month" header="Month" />
+          <Column field="officer" header="Officer" />
+          <Column field="res_time" header="Response Time" />
+        </DataTable>
+      </div>
+    </div>);
+  }
+
+}
+
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       trips: [],
       store: [],
-      isLoading: true, 
+      isLoading: true,
       errors: null,
       bikeArray: [],
       scooterArray: [],
       bikeDistance: 0,
       scooterDistance: 0,
-      totalDistance: 0, 
+      totalDistance: 0,
       vehicle: '',
       value: '',
       date: '',
+      items: [
+        {
+          label: 'Your Shift', icon: 'pi pi-fw pi-home', command: (event) => {
+            window.location = "home";
+          }
+        },
+        {
+          label: 'Shift Details', icon: 'pi pi-fw pi-calendar', command: (event) => {
+            window.location = "/";
+          }
+        },
+        {
+          label: 'Settings', icon: 'pi pi-fw pi-pencil', command: (event) => {
+            window.location = "/settings";
+          }
+        }
+      ],
     };
 
     this.handleVehicle = this.handleVehicle.bind(this);
     this.handleDate = this.handleDate.bind(this);
   }
+
+
   componentDidMount() {
     this.getTrips();
+    switch (window.location.pathname) {
+      case "/home":
+        this.setState({ activeItem: this.state.items[0] });
+        break;
+      case "/":
+        this.setState({ activeItem: this.state.items[1] });
+        break;
+      case "/settings":
+        this.setState({ activeItem: this.state.items[2] });
+        break;
+    }
+
   }
 
   handleVehicle(event) {
-    this.setState({vehicle: event.target.value});
+    this.setState({ vehicle: event.target.value });
     this.switchVehicle(event.target.value);
   }
 
   handleDate(event) {
-    this.setState({date: event.target.value});
+    this.setState({ date: event.target.value });
     this.switchDate(event.target.value);
   }
 
-  async getTrips(){
-    const res = await axios.get('https://data.austintexas.gov/resource/7d8e-dm7r.json');
-    const { data } = await res;
-    const bikeArray = [];
-    const scooterArray = [];
-    let bikeDistance = 0;
-    let scooterDistance = 0;
-
-    data.forEach(element => {
-      switch (element.vehicle_type) {
-        case 'bicycle':
-          bikeArray.push(element);
-          bikeDistance += parseInt(element.trip_distance);
-          break;
-        case 'scooter':
-          scooterArray.push(element);
-          scooterDistance += parseInt(element.trip_distance);
-          break;
-  
-        default:
-          break;
-      }
-    });
-
-    let totalDistance = Math.ceil((scooterDistance + bikeDistance) * 0.00062137);
-    bikeDistance = Math.ceil(bikeDistance * 0.00062137);
-    scooterDistance = Math.ceil(scooterDistance * 0.00062137);
-
-    this.setState({trips: data, bikeArray, scooterArray, scooterDistance, bikeDistance, totalDistance})
-  }
-
-  async filterDate(params){
-    let endpoint = 'https://data.austintexas.gov/resource/7d8e-dm7r.json' + params;
+  async filterDate(params) {
+    let endpoint = 'https://data.austintexas.gov/resource/7d8e-dm7r.json';
     const res = await axios.get(endpoint);
     const { data } = await res;
     const bikeArray = [];
@@ -92,7 +178,7 @@ class App extends Component {
           scooterArray.push(element);
           scooterDistance += parseInt(element.trip_distance);
           break;
-  
+
         default:
           break;
       }
@@ -102,144 +188,23 @@ class App extends Component {
     bikeDistance = Math.ceil(bikeDistance * 0.00062137);
     scooterDistance = Math.ceil(scooterDistance * 0.00062137);
 
-    this.setState({trips: data, bikeArray, scooterArray, scooterDistance, bikeDistance, totalDistance})
-  }
-
-  switchDate(date) {
-    switch (date) {
-      case "apr-19":
-        this.filterDate('?month=04&year=2019');
-        break;
-      case "mar-19":
-        this.filterDate('?month=03&year=2019');
-        break;
-      case "feb-19":
-        this.filterDate('?month=02&year=2019');
-        break;
-      case "jan-19":
-        this.filterDate('?month=01&year=2019');
-        break;
-      case "dec-18":
-        this.filterDate('?month=12&year=2018');
-        break;
-      case "nov-18":
-        this.filterDate('?month=11&year=2018');
-        break;
-      case "oct-18":
-        this.filterDate('?month=10&year=2018');
-        break;
-      case "sep-18":
-        this.filterDate('?month=09&year=2018');
-        break;
-      case "aug-18":
-        this.filterDate('?month=08&year=2018');
-        break;
-      case "jul-18":
-        this.filterDate('?month=07&year=2018');
-        break;
-      case "june-18":
-        this.filterDate('?month=06&year=2018');
-        break;
-      case "may-18":
-        this.filterDate('?month=05&year=2018');
-        break;
-      case "apr-18":
-        this.filterDate('?month=04&year=2018');
-        break;
-      default:
-        break;
-    }
+    this.setState({ trips: data, bikeArray, scooterArray, scooterDistance, bikeDistance, totalDistance })
   }
 
   render() {
+
     return (
-      <div className="App">
+      <div>
         <div className="App-header">
-          <h1 className="header-title"> ATX Dockless Mobility </h1>
-        </div>
-        <div className="selection-row">
-          <div> 
-            <h2> Filter by Date Range: </h2>
-            <select value={this.state.date} onChange={this.handleDate}>
-              <option value="" disabled selected>Select Date</option>
-              <option value="apr-19"> April 2019 </option>
-              <option value="mar-19"> March 2019 </option>
-              <option value="feb-19"> February 2019 </option>
-              <option value="jan-19"> January 2019 </option>
-              <option value="dec-18"> December 2018 </option>
-              <option value="nov-18"> November 2018 </option>
-              <option value="oct-18"> October 2018 </option>
-              <option value="sep-18"> September 2018 </option>
-              <option value="aug-18"> August 2018 </option>
-              <option value="jul-18"> July 2018 </option>
-              <option value="june-18"> June 2018 </option>
-              <option value="may-18"> May 2018 </option>
-              <option value="apr-18"> April 2018 </option>
-            </select>
+          <div className="app-menu">
+            <TabMenu model={this.state.items} activeItem={this.state.activeItem} onTabChange={(e) => this.setState({ activeItem: e.value })} />
           </div>
         </div>
-        <div className="Info-row"> 
-            <img className="App-img" src={scooter}/>
-            <div className="App-intro">
-              <h1> 
-                <CountUp end={this.state.scooterArray.length}> </CountUp>
-              </h1>
-              Trips Made
-            </div>
-            <div className="App-intro">
-              <h1> 
-                <CountUp end={ this.state.scooterDistance }></CountUp>
-              </h1>
-              Miles Ridden
-            </div>
-            <div className="App-intro">
-              <h1>
-                <CountUp end={ this.state.bikeArray.length }></CountUp> 
-              </h1>
-              Devices Utilized
-            </div>
-        </div>
-        <div className="Info-row"> 
-          <img className="App-img" src={bicycle}/>
-            <div className="App-intro">
-              <h1>
-                <CountUp end={ this.state.bikeArray.length }></CountUp> 
-              </h1>
-              Trips Made
-            </div>
-            <div className="App-intro">
-              <h1>
-                <CountUp end={ this.state.bikeDistance }></CountUp> 
-              </h1>
-              Miles Ridden
-            </div>
-            <div className="App-intro">
-            <h1>
-              <CountUp end={ this.state.bikeArray.length }></CountUp>
-            </h1>
-              Devices Utilized
-            </div>
-        </div>
-        <div className="Info-row"> 
-        <img className="App-img" src={map}/>
-            <div className="App-intro">
-            <h1>
-              <CountUp end={ this.state.trips.length }></CountUp> 
-            </h1>
-              Overall Trips
-            </div>
-            <div className="App-intro">
-              <h1><CountUp end={ this.state.totalDistance }></CountUp>
-              </h1> 
-              Overall Miles
-            </div>
-            <div className="App-intro">
-              <h1><CountUp end={ this.state.bikeArray.length }>
-                </CountUp>
-              </h1> 
-              Overall Devices
-            </div>
-        </div>
+        <Router>
+          <Route path="home" component={Shift} />
+          <Route path="/" exact render={() => (<ShiftDetails state={this.state} />)} />
+          <Route path="/settings/" render={() => (<Settings state={this.state} />)} />
+        </Router>
       </div>
     );
   }

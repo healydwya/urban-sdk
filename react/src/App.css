@@ -1,11 +1,23 @@
-/* styles in alphabetical order */ 
+/* styles in alphabetical order */
+
+body {
+  background: #283142;
+}
 
 .App-header {
-  background-color: #2ab7ca;
-  height: 10vh;
-  padding: 20px;
+  background-color: #3f4a5f;
+  height: auto;
   color: white;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  padding-top: 4px;
+}
+
+.header-title {
+  text-align: right;
+  margin: 0;
+  font-size: 16px;
+  margin: 6px;
 }
 
 .App-img {
@@ -15,20 +27,38 @@
 }
 
 .App-intro {
-  font-size: large;
-  align-self: center;
+  background: #3f4a5f;
+  height: 20vh;
   margin: 10px;
+  border-radius: 5px;
+  -ms-flex-item-align: center;
+  align-self: center;
   text-align: center;
+  color: #fff;
+  display: grid;
+  align-items: center;
+  grid-template-rows: 1fr;
+}
+
+.app-menu {
+  display: flex;
+  justify-content: center;
 }
 
 h1 {
   margin-top: 4px;
 }
 
+h2 {
+  font-size: 20px;
+  text-align: left;
+  padding: 4px;
+}
+
 .Info-row {
-  height: 20vh;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 20px;
 }
 
 select {
@@ -38,14 +68,34 @@ select {
   border: 1px solid #000;
 }
 
-.selection-row {
-  height: 20vh;
+.response-time-row {
+  height: auto;
   display: grid;
   grid-template-columns: 1fr;
   text-align: center;
+  background: #3f4a5f;
+  margin: 20px;
+  padding: 10px;
+  color: #fff;
+  border-radius: 5px;
 }
 
-/* styling for mobile viewing */ 
+.last-row {
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  text-align: center;
+  background: #3f4a5f;
+  margin: 20px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.last-text {
+  padding-left: 16px;
+}
+
+/* styling for mobile viewing */
 
 @media screen and (max-width: 1280px) {
   .App-img {
@@ -56,4 +106,51 @@ select {
     font-size: 20px;
     margin-top: 10px;
   }
+
+  .app-menu .p-tabmenu.p-component {
+    font-size: 10px;
+  }
+}
+
+/* Prime React Specific Styling */
+
+.app-menu .p-tabmenu-nav.p-reset {
+  border-bottom: none;
+}
+
+.app-menu .p-tabmenu.p-component .p-tabmenu-nav.p-reset .p-tabmenuitem.p-highlight .p-menuitem-link {
+  background-color: #3f4a5f;
+  border: none;
+  color: #fff;
+  opacity: 1;
+  border-bottom: 1px solid #fff;
+}
+
+.app-menu .p-tabmenu.p-component .p-tabmenu-nav.p-reset .p-tabmenuitem .p-menuitem-link {
+  background-color: #3f4a5f;
+  border: none;
+  color: #fff;
+  opacity: 0.6;
+}
+
+.app-menu .p-tabmenu.p-component .p-tabmenu-nav.p-reset .p-tabmenuitem .p-menuitem-link .p-menuitem-text {
+  color: #fff;
+}
+
+.p-datatable.incident-data .p-datatable-thead > tr > th {
+  background-color: #47536b;
+  color: #fff;
+  border: none;
+  border-bottom: #47536b;
+}
+
+.p-datatable.incident-data .p-datatable-tbody > tr,
+.p-datatable.incident-data .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #3f4a5f;
+  color: #fff;
+}
+
+.p-datatable.incident-data .p-datatable-tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid #283142;
 }
