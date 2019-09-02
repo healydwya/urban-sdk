@@ -29,7 +29,7 @@ class ShiftDetails extends Component {
 
         const result = Object.values(data);
         resultData.push(result[0]);
-        this.setState({ resultData });
+        this.setState({ trips: resultData[0] });
     }
 
 
@@ -78,7 +78,7 @@ class ShiftDetails extends Component {
             </div>
             <div className="last-row">
                 <h2 className="last-text"> Last Incidents </h2>
-                <DataTable className="incident-data" value={this.resultData}>
+                <DataTable className="incident-data" value={this.state.trips}>
                     <Column field="county" header="County" />
                     <Column field="district" header="District" />
                     <Column field="month" header="Month" />
