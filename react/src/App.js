@@ -25,12 +25,10 @@ class App extends Component {
       errors: null,
       bikeArray: [],
       scooterArray: [],
-      bikeDistance: 0,
-      scooterDistance: 0,
-      totalDistance: 0,
       vehicle: '',
       value: '',
       date: '',
+      resTotal: 0,
       items: [
         {
           label: 'Your Shift', icon: 'pi pi-fw pi-home', command: (event) => {
@@ -88,38 +86,6 @@ class App extends Component {
     const resultData = result[0];
 
     this.setState({ resultData })
-  }
-
-  async filterDate(params) {
-    let endpoint = 'https://data.austintexas.gov/resource/7d8e-dm7r.json';
-    const res = await axios.get(endpoint);
-    const { data } = await res;
-    const bikeArray = [];
-    const scooterArray = [];
-    let bikeDistance = 0;
-    let scooterDistance = 0;
-
-    data.forEach(element => {
-      switch (element.vehicle_type) {
-        case 'bicycle':
-          bikeArray.push(element);
-          bikeDistance += parseInt(element.trip_distance);
-          break;
-        case 'scooter':
-          scooterArray.push(element);
-          scooterDistance += parseInt(element.trip_distance);
-          break;
-
-        default:
-          break;
-      }
-    });
-
-    let totalDistance = Math.ceil((scooterDistance + bikeDistance) * 0.00062137);
-    bikeDistance = Math.ceil(bikeDistance * 0.00062137);
-    scooterDistance = Math.ceil(scooterDistance * 0.00062137);
-
-    this.setState({ trips: data, bikeArray, scooterArray, scooterDistance, bikeDistance, totalDistance })
   }
 
   render() {

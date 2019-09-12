@@ -15,6 +15,11 @@ class ShiftDetails extends Component {
         super(props);
         this.state = {
             resultData: [],
+            resArray: 0,
+            resAvg: 0,
+            resTime: 0,
+            resArr: [],
+            table: [],
         };
     }
 
@@ -24,15 +29,21 @@ class ShiftDetails extends Component {
 
     async getTrips() {
         const resultData = [];
+        let resAvg = 0;
+        let resArray = 0;
+        const resArr = [];
         const res = await axios.get('https://813fjxvnka.execute-api.us-east-1.amazonaws.com/v1/getdata');
         const { data } = await res;
 
         const result = Object.values(data);
         resultData.push(result[0]);
-        this.setState({ trips: resultData[0] });
+        resultData[0].forEach(element => {
+            resArray += element.res_time;
+            resArr.push(element.res_time);
+        });
+        resAvg = resArray / resultData[0].length;
+        this.setState({ trips: resultData[0], resTime: resAvg, table: resArr });
     }
-
-
 
     render() {
 
@@ -41,7 +52,7 @@ class ShiftDetails extends Component {
             datasets: [
                 {
                     label: 'Average Minutes to Respond',
-                    data: [5, 20, 5, 15, 6, 4, 8, 19],
+                    data: this.state.table,
                     fill: false,
                     backgroundColor: '#42A5F5',
                     borderColor: '#42A5F5'
@@ -53,22 +64,22 @@ class ShiftDetails extends Component {
             <div className="Info-row">
                 <div className="App-intro">
                     <h1>
-                        <CountUp end={this.props.state.scooterArray.length}> </CountUp>
+                        <CountUp end={this.state.resTime}> </CountUp>
                     </h1>
                 </div>
                 <div className="App-intro">
                     <h1>
-                        <CountUp end={this.props.state.scooterArray.length}> </CountUp>
+                        <CountUp end={this.state.resTime}> </CountUp>
                     </h1>
                 </div>
                 <div className="App-intro">
                     <h1>
-                        <CountUp end={this.props.state.scooterDistance}></CountUp>
+                        <CountUp end={this.state.resTime}></CountUp>
                     </h1>
                 </div>
                 <div className="App-intro">
                     <h1>
-                        <CountUp end={this.props.state.bikeArray.length}></CountUp>
+                        <CountUp end={this.state.resTime}></CountUp>
                     </h1>
                 </div>
             </div>
